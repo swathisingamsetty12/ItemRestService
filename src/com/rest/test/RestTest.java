@@ -34,8 +34,9 @@ import com.sun.jersey.api.client.config.DefaultClientConfig;
 public class RestTest {
 
 	@Test
-	public void testResponseStausCode() {
+	public void testGetResponseStausCode() {
 		DefaultHttpClient httpclient = new DefaultHttpClient();
+		
 		try {
 			HttpGet httpget = new HttpGet(
 					"http://wltest.sstech.cloudbees.net/services/items");
@@ -47,15 +48,15 @@ public class RestTest {
 			fail("unexpected exception has happened " + e.getMessage());
 			e.printStackTrace();
 		}
-	}
+	}	
 
 	@Test
-	public void responseContentTypeIsJson() throws ClientProtocolException,
+	public void testGetResponseContentTypeIsJson() throws ClientProtocolException,
 			IOException {
 		DefaultHttpClient httpclient = new DefaultHttpClient();	
 		String jsonMimeType = "application/json";
 		HttpUriRequest request = new HttpGet(
-				"http://wltest.sstech.cloudbees.net/services/items");		
+				"http://localhost:8080/ItemRestService/services/items");		
 		HttpResponse response = httpclient.execute(request);		
 		@SuppressWarnings("deprecation")
 		String mimeType = EntityUtils.getContentMimeType(response.getEntity());
@@ -63,11 +64,11 @@ public class RestTest {
 	}
 
 	@Test
-	public void responsePayloadIsJson() throws ClientProtocolException,
+	public void testGetResponsePayloadIsJson() throws ClientProtocolException,
 			IOException {
 		DefaultHttpClient httpclient = new DefaultHttpClient();			
 		HttpUriRequest request = new HttpGet(
-				"http://wltest.sstech.cloudbees.net/services/items");
+				"http://localhost:8080/ItemRestService/services/items");
 		request.setHeader("Accept", "application/json");		
 		HttpResponse response = httpclient.execute(request);				
 		JsonFactory jfactory = new JsonFactory();
@@ -96,12 +97,12 @@ public class RestTest {
 	}
 	
 	@Test
-	public void updateRequest() throws ClientProtocolException,
+	public void testPutRequest() throws ClientProtocolException,
 			IOException {
 					
 		ClientConfig config = new DefaultClientConfig();
 		Client client = Client.create(config);
-		WebResource service=client.resource(UriBuilder.fromUri("http://wltest.sstech.cloudbees.net/services/items/createItem").build());
+		WebResource service=client.resource(UriBuilder.fromUri("http://localhost:8080/ItemRestService/services/items/createItem").build());
 		
 		ItemInfo item1 = new ItemInfo("4", "Jacket", "9002", "Sunnyvale", 30.00,"This jacket is something special.", BigInteger.valueOf(5l));
 		ItemList itemList=new ItemList();
@@ -112,12 +113,12 @@ public class RestTest {
 	}
 	
 	@Test
-	public void createRequest() throws ClientProtocolException,
+	public void testCreateRequest() throws ClientProtocolException,
 			IOException {
 					
 		ClientConfig config = new DefaultClientConfig();
 		Client client = Client.create(config);
-		WebResource service=client.resource(UriBuilder.fromUri("http://wltest.sstech.cloudbees.net/services/items/createItem").build());
+		WebResource service=client.resource(UriBuilder.fromUri("http://localhost:8080/ItemRestService/services/items/createItem").build());
 		
 		ItemInfo item1 = new ItemInfo("5", "Jacket", "9002", "Sunnyvale", 30.00,"This jacket is something special.", BigInteger.valueOf(5l));
 		ItemList itemList=new ItemList();

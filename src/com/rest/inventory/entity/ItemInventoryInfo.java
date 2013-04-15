@@ -10,8 +10,6 @@ package com.rest.inventory.entity;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
-
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -51,13 +49,15 @@ import javax.xml.bind.annotation.XmlType;
 @XmlRootElement(name = "ItemInventoryInfo")
 public class ItemInventoryInfo {
 
-    @XmlElement(required = true)
+    @XmlElement
     protected String locale;
     @XmlElement(required = true)
     protected String itemId;
     protected double price;
     @XmlElement(name = "InventoryInfo", required = true)
     protected List<Inventory> inventoryInfo;
+    @XmlElement
+    protected String response;
 
     /**
      * Gets the value of the locale property.
@@ -121,9 +121,17 @@ public class ItemInventoryInfo {
      */
     public void setPrice(double value) {
         this.price = value;
-    }
+    } 
 
-    /**
+    public String getResponse() {
+		return response;
+	}
+
+	public void setResponse(String response) {
+		this.response = response;
+	}
+
+	/**
      * Gets the value of the inventoryInfo property.
      * 
      * <p>

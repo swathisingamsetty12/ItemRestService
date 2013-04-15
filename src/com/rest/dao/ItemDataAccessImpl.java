@@ -16,58 +16,99 @@ import com.rest.item.entity.ItemInfo;
 import com.rest.item.entity.ItemList;
 import com.rest.provider.ItemProvider;
 import com.rest.response.Response;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ItemDataAccessImpl implements ItemDataAccess {
 	
-	public ItemInventory getItems(String locale) throws SQLException {		
-		Set<String> itemIds=ItemProvider.getInstance().getModel().keySet();		
-		Iterator<String> itemIdsIterator=itemIds.iterator();		
-		ItemInventory itemInventoryList=new ItemInventory();
-		while(itemIdsIterator.hasNext()) {		
-			String itemId=itemIdsIterator.next();
-			ItemInventoryInfo itemInventoryInfo=new ItemInventoryInfo();	
-			itemInventoryInfo=getItemsById(itemId);			
-			itemInventoryInfo.setLocale(locale);
-			itemInventoryList.getItemInventoryInfo().add(itemInventoryInfo);
-		}		
+	private final static Logger logger = LoggerFactory.getLogger(ItemDataAccessImpl.class);
+	
+	public ItemInventory getItems(String locale) throws SQLException {	
+		ItemInventory itemInventoryList=new ItemInventory();		
+		Map<String, List<Map<String, ItemInfo>>> itemByStoreDetails=ItemProvider.getInstance().getModel();
+		
+		if(itemByStoreDetails != null && !itemByStoreDetails.isEmpty()) {			
+			Set<String> itemIds=itemByStoreDetails.keySet();		
+			Iterator<String> itemIdsIterator=((itemIds != null && !itemIds.isEmpty())?itemIds.iterator():null);			
+			logger.info(" itemIdsIterator is not null");
+			while(itemIdsIterator.hasNext()) {				
+				String itemId=itemIdsIterator.next();				
+				if(itemId !=null && !itemId.isEmpty()) {
+					ItemInventoryInfo itemInventoryInfo=new ItemInventoryInfo();	
+					itemInventoryInfo=getItemsById(itemId);
+					if(itemInventoryInfo.getItemId() != null && !itemInventoryInfo.getItemId().isEmpty()) {						
+						itemInventoryInfo.setLocale(locale);
+						itemInventoryList.getItemInventoryInfo().add(itemInventoryInfo);
+					}
+					else {						
+						logger.info("No data for the itemId :"+itemId);
+					}
+				}		
+				else
+					logger.info("Item Id is empty");	
+			}
+		}
+		else
+			logger.info("No data in the database");					
 		return itemInventoryList;		
 	}
 	
-	public ItemInventoryInfo getItemsById(String id) {		
-		ItemInventoryInfo itemInventoryInfo=new ItemInventoryInfo();		
-		List<Inventory> inventoryList=new ArrayList<Inventory>();
-		List<Map<String, ItemInfo>> storeInventoryList=ItemProvider.getInstance().getModel().get(id);
-		Iterator<Map<String, ItemInfo>> storeInventoryListIterator=storeInventoryList.iterator();		
-		Map<String, ItemInfo> storeByItem=new HashMap<String, ItemInfo>();
-		Inventory inventory=null;
-		ItemInfo storeItem = new ItemInfo();
-		String storeId = null;
-		
-		while(storeInventoryListIterator.hasNext()) {		
-			storeByItem=storeInventoryListIterator.next();			
-			inventory=new Inventory();				
-			Iterator<String> storeByItemIterator = storeByItem.keySet().iterator();   
+	public ItemInventoryInfo getItemsById(String id) {	
+		ItemInventoryInfo itemInventoryInfo=new ItemInventoryInfo();
+		if (id == null) {	
+			logger.warn(" Trying to get the data for an null item. ");		
+		}
+		else {
+			List<Inventory> inventoryList=new ArrayList<Inventory>();
+			List<Map<String, ItemInfo>> storeByItemInventoryList=new ArrayList<Map<String,ItemInfo>>();
+			Iterator<Map<String, ItemInfo>> storeByItemInventoryListIterator;
+			Map<String, List<Map<String, ItemInfo>>> itemByStoreDetails=ItemProvider.getInstance().getModel();
 			
-			while (storeByItemIterator.hasNext()) {			
-				storeId = storeByItemIterator.next();				
-				storeItem = storeByItem.get(storeId);				
-			}				
-			inventory.setQuantity(storeItem.getQuantity());
-			inventory.setStoreId(storeId);				
-			inventory.setDescription(storeItem.getDescription());			
-			inventoryList.add(inventory);			
-		}		
-		itemInventoryInfo.setItemId(id);
-		itemInventoryInfo.setPrice(storeItem.getPrice());		
-		itemInventoryInfo.setInventoryInfo(inventoryList);		
-		return itemInventoryInfo;
+			if(itemByStoreDetails != null && !itemByStoreDetails.isEmpty()) {
+				storeByItemInventoryList=itemByStoreDetails.get(id);
+				storeByItemInventoryListIterator=((storeByItemInventoryList != null && !storeByItemInventoryList.isEmpty())?storeByItemInventoryList.iterator():null);	
+				Map<String, ItemInfo> storeByItemInventory=new HashMap<String, ItemInfo>();
+				
+				Inventory inventory=null;
+				ItemInfo storeItem = new ItemInfo();
+				String storeId = null;
+				
+				if(storeByItemInventoryListIterator == null) {					
+					logger.info("The given itemId is not present in the database.");
+					return itemInventoryInfo;					
+				}
+				else {
+					while(storeByItemInventoryListIterator.hasNext()) {		
+						storeByItemInventory=storeByItemInventoryListIterator.next();			
+						inventory=new Inventory();				
+						Iterator<String> storeByItemIterator = ((storeByItemInventory != null && !storeByItemInventory.isEmpty())?storeByItemInventory.keySet().iterator():null) ;   
+						if(storeByItemIterator !=null ) {
+							while (storeByItemIterator.hasNext()) {			
+								storeId = storeByItemIterator.next();				
+								storeItem = storeByItemInventory.get(storeId);				
+							}
+						}
+						inventory.setQuantity(storeItem.getQuantity());
+						inventory.setStoreId(storeId);				
+						inventory.setDescription(storeItem.getDescription());			
+						inventoryList.add(inventory);			
+					}	
+					itemInventoryInfo.setItemId(id);
+					itemInventoryInfo.setPrice(storeItem.getPrice());	
+					itemInventoryInfo.setInventoryInfo(inventoryList);
+					return itemInventoryInfo;				
+				}
+			}			
+			logger.info("No records in the database.");	
+		}
+		return itemInventoryInfo;		
 	}		
 	
 	public Response createOrupdateItem(JAXBElement<ItemList> items, Response itemResponse) throws SQLException {		
 		Map<String, List<Map<String, ItemInfo>>> itemByStoreInventoryList=ItemProvider.getInstance().getModel();
 		List<Map<String, ItemInfo>> storeInventoryList=new ArrayList<Map<String,ItemInfo>>();		
 		Map<String, ItemInfo> storeInventory=new HashMap<String, ItemInfo>();
-		List<ItemInfo> itemList =items.getValue().getItemInfo();
+		List<ItemInfo> itemList =((items.getValue() != null && (items.getValue().getItemInfo() != null && !items.getValue().getItemInfo().isEmpty()))?items.getValue().getItemInfo():null);
 		Response response=new Response();
 		
 		for(ItemInfo item:itemList) {			
@@ -111,12 +152,4 @@ public class ItemDataAccessImpl implements ItemDataAccess {
 			response.getItemId().add(" items are updated");
 		return response;
 	}
-	
-	public void deleteItem(String id) {
-		if(ItemProvider.getInstance().getModel().containsKey(String.valueOf(id))) {
-			ItemProvider.getInstance().getModel().remove(id);
-		}
-		else
-			throw new RuntimeException("Delete: Item with " + id +  " not found");
-	}	
 }

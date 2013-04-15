@@ -3,7 +3,6 @@ package com.rest.service;
 import java.io.IOException;
 import java.sql.SQLException;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -36,6 +35,7 @@ public class ItemRestService {
 	  return itemService.getItems(locale); 
   }
   
+//Return the given itemId
   @GET 
   @Path("{itemIdToRetrieve}")
   @Produces(MediaType.APPLICATION_JSON)
@@ -52,15 +52,7 @@ public class ItemRestService {
   public Response createItem(JAXBElement<ItemList> items) throws IOException, SQLException {	
 	  ItemService itemService=new ItemServiceImpl();
 	  return itemService.createOrUpdateItem(items);   
-  } 
-  
-  //Deletes an single item 
-  @DELETE
-  @Path("{itemToDelete}")
-  public void deleteTodo(@PathParam("itemToDelete") String id) {
-	  ItemService itemService=new ItemServiceImpl();
-	  itemService.deleteItem(id);   
-  }
+  }  
   
   //Creates or updates an item
   @PUT
