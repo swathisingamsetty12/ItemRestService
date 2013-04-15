@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tns:Response xmlns:tns="http://www.example.org/Response" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.example.org/Response ../XSDS/Response.xsd ">
+  <tns:itemId>tns:itemId</tns:itemId>
+</tns:Response>

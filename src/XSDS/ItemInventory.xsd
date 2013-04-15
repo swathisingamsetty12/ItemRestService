@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.example.org/ItemInventory" 
+xmlns:tns="http://www.example.org/ItemInventory" elementFormDefault="qualified">
+
+<xs:element name="ItemInventory">
+<xs:complexType>
+  <xs:sequence>   
+    <xs:element ref="tns:ItemInventoryInfo" maxOccurs="unbounded" minOccurs="0"/>
+  </xs:sequence>
+</xs:complexType> 
+</xs:element>
+
+<xs:element name="ItemInventoryInfo">
+<xs:complexType>
+  <xs:sequence>
+    <xs:element name="locale" type="xs:string"/>
+    <xs:element name="itemId" type="xs:string"/>
+    <xs:element name="price" type="xs:double"/>    
+    <xs:element name="InventoryInfo" type="tns:Inventory"  maxOccurs="unbounded" minOccurs="1"/>
+  </xs:sequence>
+</xs:complexType> 
+</xs:element>
+<xs:complexType name="Inventory">
+	<xs:sequence>
+    	<xs:element name="storeId" type="xs:string"/>
+       	<xs:element name="quantity" type="xs:integer"/>
+       	<xs:element name="description" type="xs:string"/>
+     </xs:sequence>
+</xs:complexType>
+
+</xs:schema>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tns:ItemList xmlns:tns="http://www.example.org/ItemList" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.example.org/ItemList ../XSDS/Item.xsd ">
+  <tns:ItemInfo>
+    <tns:itemId>tns:itemId</tns:itemId>
+    <tns:itemName>tns:itemName</tns:itemName>
+    <tns:storeId>tns:storeId</tns:storeId>
+    <tns:storeName>tns:storeName</tns:storeName>
+    <tns:price>0.0</tns:price>
+    <tns:description>tns:description</tns:description>
+    <tns:quantity>0</tns:quantity>
+  </tns:ItemInfo>
+</tns:ItemList>

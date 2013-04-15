@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tns:ItemInventory xmlns:tns="http://www.example.org/ItemInventory" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.example.org/ItemInventory ../XSDS/ItemInventory.xsd ">
+  <tns:ItemInventoryInfo>
+    <tns:locale>tns:locale</tns:locale>
+    <tns:itemId>tns:itemId</tns:itemId>
+    <tns:price>0.0</tns:price>
+    <tns:description>tns:description</tns:description>
+    <tns:InventoryInfo>
+      <tns:storeId>tns:storeId</tns:storeId>
+      <tns:quantity>0</tns:quantity>
+    </tns:InventoryInfo>
+  </tns:ItemInventoryInfo>
+</tns:ItemInventory>
