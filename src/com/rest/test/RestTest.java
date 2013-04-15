@@ -56,7 +56,7 @@ public class RestTest {
 		DefaultHttpClient httpclient = new DefaultHttpClient();	
 		String jsonMimeType = "application/json";
 		HttpUriRequest request = new HttpGet(
-				"http://localhost:8080/ItemRestService/services/items");		
+				"http://wltest.sstech.cloudbees.net/services/items");		
 		HttpResponse response = httpclient.execute(request);		
 		@SuppressWarnings("deprecation")
 		String mimeType = EntityUtils.getContentMimeType(response.getEntity());
@@ -68,7 +68,7 @@ public class RestTest {
 			IOException {
 		DefaultHttpClient httpclient = new DefaultHttpClient();			
 		HttpUriRequest request = new HttpGet(
-				"http://localhost:8080/ItemRestService/services/items");
+				"http://wltest.sstech.cloudbees.net/services/items");
 		request.setHeader("Accept", "application/json");		
 		HttpResponse response = httpclient.execute(request);				
 		JsonFactory jfactory = new JsonFactory();
@@ -102,13 +102,13 @@ public class RestTest {
 					
 		ClientConfig config = new DefaultClientConfig();
 		Client client = Client.create(config);
-		WebResource service=client.resource(UriBuilder.fromUri("http://localhost:8080/ItemRestService/services/items/createItem").build());
+		WebResource service=client.resource(UriBuilder.fromUri("http://wltest.sstech.cloudbees.net/services/items/createItem").build());
 		
 		ItemInfo item1 = new ItemInfo("4", "Jacket", "9002", "Sunnyvale", 30.00,"This jacket is something special.", BigInteger.valueOf(5l));
 		ItemList itemList=new ItemList();
 		itemList.getItemInfo().add(item1);	
 		
-		ClientResponse clientResponse =service.accept(MediaType.APPLICATION_JSON).post(ClientResponse.class, itemList);				
+		ClientResponse clientResponse =service.accept(MediaType.APPLICATION_JSON).put(ClientResponse.class, itemList);				
 		assertEquals(200,clientResponse.getStatus());
 	}
 	
@@ -118,13 +118,13 @@ public class RestTest {
 					
 		ClientConfig config = new DefaultClientConfig();
 		Client client = Client.create(config);
-		WebResource service=client.resource(UriBuilder.fromUri("http://localhost:8080/ItemRestService/services/items/createItem").build());
+		WebResource service=client.resource(UriBuilder.fromUri("http://wltest.sstech.cloudbees.net/services/items/createItem").build());
 		
 		ItemInfo item1 = new ItemInfo("5", "Jacket", "9002", "Sunnyvale", 30.00,"This jacket is something special.", BigInteger.valueOf(5l));
 		ItemList itemList=new ItemList();
 		itemList.getItemInfo().add(item1);	
 		
-		ClientResponse clientResponse =service.accept(MediaType.APPLICATION_JSON).put(ClientResponse.class, itemList);				
+		ClientResponse clientResponse =service.accept(MediaType.APPLICATION_JSON).post(ClientResponse.class, itemList);				
 		assertEquals(200,clientResponse.getStatus());
 	}
 	
