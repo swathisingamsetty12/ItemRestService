@@ -31,6 +31,7 @@ public class ItemRestService {
   @Produces(MediaType.APPLICATION_JSON)
   public ItemInventory getItems() throws SQLException {
 	  String locale=headers.getAcceptableLanguages().get(0).toString();	  
+	  
 	  ItemService itemService=new ItemServiceImpl();
 	  return itemService.getItems(locale); 
   }
